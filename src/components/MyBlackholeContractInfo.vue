@@ -33,7 +33,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <table class="contract-state">
+  <table class="contract-state contract-state--important">
     <tr>
       <td><b>Contract</b></td>
       <td>{{ contract_address }}</td>
@@ -74,6 +74,24 @@ onUnmounted(() => {
 <style scoped>
 table.contract-state {
   text-align: left;
+}
+
+table.contract-state--important td:first-child {
+  color: silver;
+}
+
+@media (prefers-color-scheme: light) {
+  table.contract-state--important td:first-child {
+    color: #0000cc;
+  }
+}
+
+@media (max-width: 600px) {
+  table.contract-state td {
+    display: table-row;
+    vertical-align: top;
+    word-break: break-all;
+  }
 }
 
 .loading {

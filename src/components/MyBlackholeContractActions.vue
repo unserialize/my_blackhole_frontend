@@ -27,13 +27,13 @@ function sendWithdraw(withdrawTons: number) {
 <template>
   <h3>Actions</h3>
   <div>
-    <button @click="sendIncrement(2)">Increment by 2</button>
+    <button class="primary" @click="sendIncrement(2)">Increment by 2</button>
   </div>
   <div>
-    <button @click="sendDeposit(1)">Deposit by 1 TON</button>
+    <button class="primary" @click="sendDeposit(1)">Deposit by 1 TON</button>
   </div>
   <div>
-    <button @click="sendWithdraw(0.7)">Withdraw 0.7 TON (owner only)</button>
+    <button class="primary" @click="sendWithdraw(0.7)">Withdraw 0.7 TON (owner only)</button>
   </div>
 </template>
 

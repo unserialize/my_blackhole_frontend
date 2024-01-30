@@ -11,6 +11,7 @@
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",
     "@tonconnect/ui": "^2.0.0",
+    "@twa-dev/sdk": "^7.0.0",
     "ton": "^13.9.0",
     "ton-core": "^0.53.0",
     "ton-crypto": "^3.2.0",

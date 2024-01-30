@@ -1,11 +1,19 @@
 :root {
+  --tg-theme-color: rgba(255, 255, 255, 0.87);
+  --tg-theme-bg-color: #242424;
+  --tg-theme-link-color: #646cff;
+  --tg-theme-link-color-hover: red;
+  --tg-theme-button-color: #1a1a1a;
+  --tg-theme-button-text-color: rgba(255, 255, 255, 0.87);
+  --tg-theme-button-color-border-hover: white;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--tg-theme-color);
+  background-color: var(--tg-theme-bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,11 +23,11 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--tg-theme-link-color);
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--tg-theme-link-color-hover);
 }
 
 body {
@@ -33,28 +41,34 @@ h1 {
   line-height: 1.1;
 }
 
-button {
+button.primary {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--tg-theme-button-color);
+  color: var(--tg-theme-button-text-color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
+
+button.primary:hover {
+  border-color: var(--tg-theme-button-color-border-hover);
 }
-button:focus,
-button:focus-visible {
+
+button.primary:focus,
+button.primary:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.card {
-  padding: 2em;
+@media (max-width: 600px) {
+  button.primary {
+    width: 100%;
+  }
 }
+
 
 #app {
   max-width: 940px;
@@ -65,13 +79,18 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --tg-theme-color: #213547;
+    --tg-theme-bg-color: #ffffff;
+    --tg-theme-link-color: #747bff;
+    --tg-theme-link-color-hover: #646bf5;
+    --tg-theme-button-color: #f9f9f9;
+    --tg-theme-button-text-color: #213547;
+    --tg-theme-button-color-border-hover: #309090;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+/* `.is_telegram` class is set from JS if a web app is launched inside Telegram client, not just a browser tab */
+body.is-telegram {
+  --tg-theme-link-color-hover: var(--tg-theme-link-color);
+  --tg-theme-button-color-border-hover: var(--tg-theme-button-color);
 }

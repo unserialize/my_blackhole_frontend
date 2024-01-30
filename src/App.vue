@@ -8,6 +8,7 @@ import { MyBlackholeContract } from './contracts/MyBlackholeContract.ts';
 import { TonClient } from 'ton';
 import { getHttpEndpoint } from '@orbs-network/ton-access';
 import { SenderImplViaTonConnect } from './SenderImplViaTonConnect.ts';
+import { isInsideTelegram } from './telegram-integrations.ts';
 
 let tonClient: TonClient | undefined = undefined
 
@@ -25,6 +26,8 @@ async function createMyBlackholeContract(contractAddress: string): Promise<Opene
 }
 
 onMounted(async () => {
+  document.body.classList.toggle('is-telegram', isInsideTelegram())
+
   const tonConnect = new TonConnectUI({
     manifestUrl: 'https://unserialize.github.io/my_blackhole_frontend/ton-manifest.json',
     buttonRootId: 'tonConnectUIButton',
@@ -45,7 +48,9 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div id="tonConnectUIButton"></div>
+    <div style="display: flex; flex-direction: column; align-items: end;">
+      <div id="tonConnectUIButton"></div>
+    </div>
     <MyBlackholeContractInfo v-if="openedContract && contractAddress && walletAddress"
         :contract_address="contractAddress" :opened_contract="openedContract" :connected_wallet_address="walletAddress" />
     <MyBlackholeContractActions v-if="openedContract && contractAddress && sender"
