@@ -1,39 +1,34 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { fromNano, TonClient } from 'ton';
-import { getHttpEndpoint } from '@orbs-network/ton-access';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { fromNano } from 'ton';
 import { Address, OpenedContract } from 'ton-core';
 import { MyBlackholeContract, MyBlackholeContractRespBalance, MyBlackholeContractRespFullState } from '../contracts/MyBlackholeContract';
 
 const props = defineProps<{
-  contract_address: string
+  contract_address: string,
+  connected_wallet_address: Address,
+  opened_contract: OpenedContract<MyBlackholeContract>,
 }>()
 
 const balance = ref<MyBlackholeContractRespBalance>()
 const fullState = ref<MyBlackholeContractRespFullState>()
+const isConnectedWalletOwner = computed(() => fullState.value?.owner_addr.equals(props.connected_wallet_address))
 
-async function createMyBlackholeContract(contractAddress: string): Promise<OpenedContract<MyBlackholeContract>> {
-  const client = new TonClient({
-    endpoint: await getHttpEndpoint({ network: 'testnet' }),
-  })
+let refreshUITimeout: number | undefined = undefined
 
-  return client.open(MyBlackholeContract.createFromAddress(Address.parse(contractAddress)))
+function refreshUI() {
+  const contract = props.opened_contract
+  contract.getBalance().then(v => balance.value = v)
+  contract.getFullState().then(v => fullState.value = v)
+
+  refreshUITimeout = setTimeout(refreshUI, 5000)
 }
 
-async function loadBalance(contract: OpenedContract<MyBlackholeContract>) {
-  balance.value = await contract.getBalance()
-}
-
-async function loadFullState(contract: OpenedContract<MyBlackholeContract>) {
-  fullState.value = await contract.getFullState()
-}
-
-onMounted(async () => {
-  const contract = await createMyBlackholeContract(props.contract_address)
-  await Promise.all([
-    loadBalance(contract),
-    loadFullState(contract),
-  ])
+onMounted(() => {
+  refreshUI()
+})
+onUnmounted(() => {
+  clearTimeout(refreshUITimeout)
 })
 </script>
 
@@ -68,7 +63,10 @@ onMounted(async () => {
     </tr>
     <tr>
       <td><b>owner_addr</b></td>
-      <td>{{ fullState.owner_addr.toString() }}</td>
+      <td>
+        {{ fullState.owner_addr.toString() }}
+        <span v-if="isConnectedWalletOwner" class="label-i-am-owner">Logined as owner</span>
+      </td>
     </tr>
   </table>
 </template>
@@ -80,5 +78,10 @@ table.contract-state {
 
 .loading {
   opacity: 0.5;
+}
+
+.label-i-am-owner {
+  color: #44cc55;
+  font-weight: 600;
 }
 </style>
